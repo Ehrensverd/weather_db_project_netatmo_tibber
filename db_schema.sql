@@ -1,13 +1,13 @@
 
-
 -- tibber schema
+CREATE SCHEMA tibber;
 
-CREATE TABLE IF NOT EXISTS live_measurements(
+CREATE TABLE IF NOT EXISTS tibber.live_measurements(
 
 	data_timestamp timestamptz not null unique primary key,
 	-- Timestamp when usage occured
 	power real not null,
-		-- Consumption at the moment (Watt)  
+	-- Consumption at the moment (Watt)  
 	last_meter_consumption real,
 	-- Last meter active import register state (kWh)
 	accumulated_consumption real not null,
@@ -52,9 +52,14 @@ CREATE TABLE IF NOT EXISTS live_measurements(
 	-- Device signal strength (Pulse - dB; Watty - percent)
 );
 
+GRANT SELECT, INSERT, UPDATE ON tibber.live_measurements TO <user>;
+
+
 
 -- netatmo schema
-CREATE TABLE IF NOT EXISTS main_indoor_module( 
+CREATE SCHEMA netatmo;
+
+CREATE TABLE IF NOT EXISTS netatmo.main_indoor_module( 
 
 	data_timestamp timestamptz not null unique primary key,
 	-- Timestamp when data was measured
@@ -85,7 +90,7 @@ CREATE TABLE IF NOT EXISTS main_indoor_module(
 
 );
 
-CREATE TABLE IF NOT EXISTS outdoor_module( 
+CREATE TABLE IF NOT EXISTS netatmo.outdoor_module( 
 
 	data_timestamp timestamptz not null unique primary key,
 	-- Timestamp when data was measured
@@ -105,7 +110,7 @@ CREATE TABLE IF NOT EXISTS outdoor_module(
 	-- Trend for the last 12h (up, down, stable)
 );
 
-CREATE TABLE IF NOT EXISTS rain_gauge_module( 
+CREATE TABLE IF NOT EXISTS netatmo.rain_gauge_module( 
 
 	data_timestamp timestamptz not null unique primary key,
 	-- timestamp when data was measured
@@ -117,30 +122,22 @@ CREATE TABLE IF NOT EXISTS rain_gauge_module(
 	-- rain measured for the last hour (mm)
 );
 
-CREATE TABLE IF NOT EXISTS wind_gauge_module( 
+CREATE TABLE IF NOT EXISTS netatmo.wind_gauge_module( 
 
 	data_timestamp timestamptz not null unique primary key,
 	-- timestamp when data was measured
 	wind_strength real not null,
 	-- Wind strenght (km/h)
 	wind_angle real not null,
-	-- Wind angle 
-	/* N: 
-	 * 337.5 > angle <=  22.5
-	 * NE:
-	 * angle <=  67.5 
-	 * E:
-	 * angle <= 112.5
-	 * SE:
-	 * angle <= 157.5
-	 * S:
-	 * angle <= 202.5
-	 * SW:
-	 * angle <= 247.5
-	 * W:
-	 * angle <= 292.5
-	 * NW:
-	 * angle <= 337.5
+	-- Wind angles 
+	/* N:	angle <  337.5 | angle <=  22.5
+	 * NE:	angle <=  67.5 
+	 * E: 	angle <= 112.5
+	 * SE:	angle <= 157.5
+	 * S:	angle <= 202.5
+	 * SW:	angle <= 247.5
+	 * W:	angle <= 292.5
+	 * NW:	angle <= 337.5
 	 */
 	gust_strength real not null,
 	-- Gust strengh (km/h)
@@ -155,7 +152,7 @@ CREATE TABLE IF NOT EXISTS wind_gauge_module(
 	
 );
 
-CREATE TABLE IF NOT EXISTS additional_indoor_module( 
+CREATE TABLE IF NOT EXISTS netatmo.additional_indoor_module( 
 
 	data_timestamp timestamptz not null unique primary key,
 	-- timestamp when data was measured
@@ -181,3 +178,10 @@ CREATE TABLE IF NOT EXISTS additional_indoor_module(
 	-- Trend for the last 12h (up, down, stable)
 
 );
+
+
+GRANT SELECT, INSERT, UPDATE ON netatmo.main_indoor_module TO <user>;
+GRANT SELECT, INSERT, UPDATE ON netatmo.outdoor_module  TO <user>;
+GRANT SELECT, INSERT, UPDATE ON netatmo.rain_gauge_module TO <user>;
+GRANT SELECT, INSERT, UPDATE ON netatmo.wind_gauge_module TO <user>;
+GRANT SELECT, INSERT, UPDATE ON netatmo.additional_indoor_module TO <user>;
