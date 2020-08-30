@@ -1,18 +1,19 @@
 
--- tibber
+
+-- tibber schema
 
 CREATE TABLE IF NOT EXISTS live_measurements(
 
-    data_timestamp timestamptz not null unique primary key, 	
-    -- Timestamp when usage occured
-   	power real not null, 							
-   	-- Consumption at the moment (Watt)  
-    last_meter_consumption real, 				
-    -- Last meter active import register state (kWh)
-    accumulated_consumption real not null,
-    -- kWh consumed since midnight
-    accumulated_production real not null,
-    -- net kWh produced since midnight
+	data_timestamp timestamptz not null unique primary key,
+	-- Timestamp when usage occured
+	power real not null,
+		-- Consumption at the moment (Watt)  
+	last_meter_consumption real,
+	-- Last meter active import register state (kWh)
+	accumulated_consumption real not null,
+	-- kWh consumed since midnight
+	accumulated_production real not null,
+	-- net kWh produced since midnight
 	accumulated_cost real,
 	-- Accumulated cost since midnight; requires active Tibber power deal
 	accumulated_reward real,
@@ -49,11 +50,10 @@ CREATE TABLE IF NOT EXISTS live_measurements(
 	-- Current on L3; on Kaifa and Aidon meters the value is not part of every HAN data frame therefore the value is null at timestamps with second value other than 0, 10, 20, 30, 40, 50. There can be other deviations based on concrete meter firmware. Value is always null for single phase meters.
 	signal_strength smallint
 	-- Device signal strength (Pulse - dB; Watty - percent)
-
 );
 
 
--- netatmo
+-- netatmo schema
 CREATE TABLE IF NOT EXISTS main_indoor_module( 
 
 	data_timestamp timestamptz not null unique primary key,
@@ -103,8 +103,6 @@ CREATE TABLE IF NOT EXISTS outdoor_module(
 	-- Timestamp max temp
 	temp_trend varchar(9) not null
 	-- Trend for the last 12h (up, down, stable)
-
-
 );
 
 CREATE TABLE IF NOT EXISTS rain_gauge_module( 
@@ -117,7 +115,6 @@ CREATE TABLE IF NOT EXISTS rain_gauge_module(
 	-- Rain measured for past 24h(mm)
 	sum_rain_1 real not null 
 	-- rain measured for the last hour (mm)
-
 );
 
 CREATE TABLE IF NOT EXISTS wind_gauge_module( 
@@ -128,15 +125,23 @@ CREATE TABLE IF NOT EXISTS wind_gauge_module(
 	-- Wind strenght (km/h)
 	wind_angle real not null,
 	-- Wind angle 
-	/* N: 337.5 > angle <=  22.5
-	 * NE:        angle <=  67.5 
-	 * E:  		  angle <= 112.5
-	 * SE:  	  angle <= 157.5
-	 * S:  		  angle <= 202.5
-	 * SW:  	  angle <= 247.5
-	 * W:  		  angle <= 292.5
-	 * NW:  	  angle <= 337.5
-	*/
+	/* N: 
+	 * 337.5 > angle <=  22.5
+	 * NE:
+	 * angle <=  67.5 
+	 * E:
+	 * angle <= 112.5
+	 * SE:
+	 * angle <= 157.5
+	 * S:
+	 * angle <= 202.5
+	 * SW:
+	 * angle <= 247.5
+	 * W:
+	 * angle <= 292.5
+	 * NW:
+	 * angle <= 337.5
+	 */
 	gust_strength real not null,
 	-- Gust strengh (km/h)
 	gust_angle real not null,
@@ -174,7 +179,5 @@ CREATE TABLE IF NOT EXISTS additional_indoor_module(
 	-- Timestamp max temp
 	temp_trend varchar(9) not null
 	-- Trend for the last 12h (up, down, stable)
-
-
 
 );
